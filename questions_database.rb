@@ -17,6 +17,7 @@ end
 # require 'byebug'
 class Users
   attr_accessor :fname, :lname
+
   def self.all
     data = QuestionsDatabase.instance.execute("SELECT * FROM users")
     data.map { |datum| Users.new(datum) }
@@ -57,6 +58,15 @@ class Users
     @fname = options['fname']
     @lname = options['lname']
   end
+
+  def authored_questions
+    Question.find_by_author_id(@id)
+  end
+
+  def authored_replies
+    Reply.find_by_user_id(@id)
+  end
+
 
   def create
     raise "#{self} already in database" if @id

@@ -66,6 +66,7 @@ INSERT INTO
 VALUES
   (1, NULL, 2, "WHY I STILL DONT GET"),
   (1, 1, 2, "UR DUMB");
+  (1, 1, 3, "NO U!");
 
 
 DROP TABLE IF EXISTS question_likes;

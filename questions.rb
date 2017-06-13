@@ -61,7 +61,13 @@ class Questions
     some_questions.map { |question| Questions.new(question)}
   end
 
+  def author
+    Users.find_by_id(@author_id)
+  end
 
+  def replies
+    Reply.find_by_question_id(@id)
+  end
 
   def create
     raise "#{self} already in database" if @id
