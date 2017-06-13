@@ -43,8 +43,8 @@ CREATE TABLE question_follows (
 
 INSERT INTO
   question_follows(question_id, user_id)
-  VALUES
-  (1, 2);
+VALUES
+  (1, 2), (1, 3);
 
 DROP TABLE IF EXISTS replies;
 
@@ -61,11 +61,18 @@ CREATE TABLE replies (
 
 );
 
+INSERT INTO
+  replies(subject_question_id, parent_id, user_id, body)
+VALUES
+  (1, NULL, 2, "WHY I STILL DONT GET"),
+  (1, 1, 2, "UR DUMB");
+
+
 DROP TABLE IF EXISTS question_likes;
 
 CREATE TABLE question_likes (
   id INTEGER PRIMARY KEY,
-  liked BOOLEAN DEFAULT FALSE,
+  likes BOOLEAN DEFAULT 0,
   user_id INTEGER NOT NULL,
   question_id INTEGER NOT NULL,
 
@@ -73,3 +80,9 @@ CREATE TABLE question_likes (
   FOREIGN KEY (question_id) REFERENCES questions(id)
 
 );
+
+INSERT INTO
+  question_likes(likes, user_id, question_id)
+VALUES
+  (4, 1, 2),
+  (100, 2, 1);

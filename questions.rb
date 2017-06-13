@@ -1,6 +1,7 @@
 require 'sqlite3'
 require 'singleton'
 require_relative 'questions_database'
+require_relative 'question_follows'
 
 class Questions
   attr_accessor :title, :body, :author_id
@@ -16,7 +17,7 @@ class Questions
     questions
     questions.map { |question| Questions.new(question)}
   end
-  
+
   def self.find_by_id(id)
 
     some_question = QuestionsDatabase.instance.execute(<<-SQL, id)
@@ -84,8 +85,6 @@ class Questions
         id = ?
     SQL
   end
-
-
 
 
 end
