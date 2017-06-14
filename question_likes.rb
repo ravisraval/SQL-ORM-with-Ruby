@@ -1,4 +1,4 @@
-require_relative 'questions'
+require_relative 'questions.rb'
 require_relative 'question_follows'
 require_relative 'questions_database'
 require_relative 'reply'
@@ -22,6 +22,38 @@ class QuestionLikes
         id = ?
     SQL
     Question_likes.new(q_likes.first)
+  end
+
+  def self.likers_for_question_id(question_id)
+    likppl = QuestionsDatabase.instance.execute(<<-SQL, question_id)
+      SELECT
+        *
+      FROM
+        users
+      JOIN
+        question_likes ON users.id = question_likes.user_id
+      JOIN
+        questions ON questions.id = question_likes.question_id
+      WHERE
+        question_likes.question_id = ?
+    SQL
+    likppl.map { |usr| Users.new(usr) }
+  end
+
+  def self.num_likes_for_question_id(question_id)
+    likppl = QuestionsDatabase.instance.execute(<<-SQL, question_id)
+      SELECT
+        COUNT(*)
+      FROM
+        users
+      JOIN
+        question_likes ON users.id = question_likes.user_id
+      JOIN
+        questions ON questions.id = question_likes.question_id
+      WHERE
+        question_likes.question_id = ?
+    SQL
+    likppl.first.values.first
   end
 
   def initialize(options)

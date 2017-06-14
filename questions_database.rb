@@ -17,6 +17,7 @@ end
 # require 'byebug'
 class Users
   attr_accessor :fname, :lname
+  attr_reader :id
 
   def self.all
     data = QuestionsDatabase.instance.execute("SELECT * FROM users")
@@ -34,7 +35,6 @@ class Users
        id = ?
 
     SQL
-    p some_user
     Users.new(some_user.first)
   end
 
@@ -60,13 +60,16 @@ class Users
   end
 
   def authored_questions
-    Question.find_by_author_id(@id)
+    Questions.find_by_author_id(@id)
   end
 
   def authored_replies
-    Reply.find_by_user_id(@id)
+    Replies.find_by_user_id(@id)
   end
 
+  def followed_questions
+    QuestionFollows.followed_questions_for_user_id(@id)
+  end
 
   def create
     raise "#{self} already in database" if @id
@@ -89,5 +92,14 @@ class Users
       WHERE
         id = ?
     SQL
+  end
+
+  def save
+    if @id
+      QuestionsDatabase.instance.execute(<<-SQL, @fname, @lname, @id)
+
+    SQL
+
+
   end
 end

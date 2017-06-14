@@ -65,15 +65,16 @@ INSERT INTO
   replies(subject_question_id, parent_id, user_id, body)
 VALUES
   (1, NULL, 2, "WHY I STILL DONT GET"),
-  (1, 1, 2, "UR DUMB");
-  (1, 1, 3, "NO U!");
+  (1, 1, 2, "UR DUMB"),
+  (1, 1, 3, "NO U!"),
+  (1, 2, 2, "This is getting nowhere");
 
 
 DROP TABLE IF EXISTS question_likes;
 
 CREATE TABLE question_likes (
   id INTEGER PRIMARY KEY,
-  likes BOOLEAN DEFAULT 0,
+  likes INTEGER DEFAULT 0,
   user_id INTEGER NOT NULL,
   question_id INTEGER NOT NULL,
 
@@ -86,4 +87,4 @@ INSERT INTO
   question_likes(likes, user_id, question_id)
 VALUES
   (4, 1, 2),
-  (100, 2, 1);
+  (10, 2, 1);

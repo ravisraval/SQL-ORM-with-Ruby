@@ -5,6 +5,7 @@ require_relative 'question_follows'
 
 class Questions
   attr_accessor :title, :body, :author_id
+  attr_reader :id
   def initialize(options)
     @id = options['id']
     @title = options['title']
@@ -32,6 +33,10 @@ class Questions
     # p some_user?
     p some_question
     Questions.new(some_question.first)
+  end
+
+  def self.most_followed(n)
+    QuestionFollows.most_followed_questions(n)
   end
 
   def self.find_by_title(title)
@@ -66,7 +71,11 @@ class Questions
   end
 
   def replies
-    Reply.find_by_question_id(@id)
+    Replies.find_by_subject_question_id(@id)
+  end
+
+  def followers
+    QuestionFollows.followers_for_question_id(@id)
   end
 
   def create

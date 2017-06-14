@@ -1,5 +1,7 @@
-require_relative 'questions'
+require_relative 'questions.rb'
 require_relative 'questions_database'
+require_relative 'question_likes'
+
 
 
 class Replies
@@ -50,14 +52,14 @@ class Replies
     some_replies.map { |reply| Replies.new(reply) }
   end
 
-  def self.find_by_question_id(question_id)
-    some_replies = QuestionsDatabase.instance.execute(<<-SQL, question_id)
+  def self.find_by_subject_question_id(subject_question_id)
+    some_replies = QuestionsDatabase.instance.execute(<<-SQL, subject_question_id)
       SELECT
         *
       FROM
         replies
       WHERE
-       question_id = ?
+       subject_question_id = ?
 
     SQL
     # p some_user?
@@ -78,8 +80,8 @@ class Replies
   end
 
   def child_replies
-    children = QuestionsDatabase.instance.execute("SELECT * FROM replies WHERE parent_id = @id")
-    children.map { |child| Reply.new(child) }
+    children = QuestionsDatabase.instance.execute("SELECT * FROM replies WHERE parent_id = #{@id}")
+    children.map { |child| Replies.new(child) }
   end
 
   def create

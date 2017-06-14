@@ -1,5 +1,7 @@
-require_relative 'questions'
+require_relative 'questions.rb'
 require_relative 'questions_database'
+require_relative 'reply'
+
 
 
 class QuestionFollows
@@ -23,6 +25,25 @@ class QuestionFollows
     Question_follows.new(q_follow.first)
   end
 
+
+
+  def self.followed_questions_for_user_id(user_id)
+    user_questions = QuestionsDatabase.instance.execute(<<-SQL, user_id)
+      SELECT
+        *
+      FROM
+        questions
+      JOIN
+        question_follows ON questions.id = question_follows.question_id
+      JOIN
+        users ON users.id = question_follows.user_id
+
+      WHERE
+        user_id = ?
+    SQL
+    user_questions.map { |user_q| Questions.new(user_q) }
+  end
+
   def self.followers_for_question_id(question_id)
     user_follows = QuestionsDatabase.instance.execute(<<-SQL, question_id)
       SELECT
@@ -37,9 +58,28 @@ class QuestionFollows
         questions.id = ?
     SQL
     user_follows.map { |user| Users.new(user) }
-
   end
 
+  def self.most_followed_questions(n)
+    most_fq = QuestionsDatabase.instance.execute(<<-SQL, n)
+      SELECT
+        *
+      FROM
+        questions
+      JOIN
+        question_follows ON questions.id = question_follows.question_id
+      -- JOIN
+        -- user
+      GROUP BY
+        questions.id
+      ORDER BY
+        COUNT(*) DESC
+      LIMIT
+        ?
+
+    SQL
+    most_fq.map { |fq| Questions.new(fq) }
+  end
 
   def initialize(options)
     @id = options['id']
